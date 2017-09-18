@@ -1,5 +1,7 @@
 #include "AstReader.h"
 #include <sstream>
+#include <utility>
+#include <memory>
 #include "CommandLineSplitter.h"
 #include <iostream>
 #include "ClangUtilities/StringLiteralExtractor.h"
@@ -239,7 +241,7 @@ public:
         {
             return PARENT::TraverseDecl(decl);
         }
-        auto node = std::make_unique<GenericAstNode>();
+        auto node = std::unique_ptr<GenericAstNode>();
         node->myAstNode = decl;
         node->name = decl->getDeclKindName() + std::string("Decl"); // Try to mimick clang default dump
         if (auto *FD = dyn_cast<FunctionDecl>(decl))
@@ -347,7 +349,7 @@ public:
         {
             return PARENT::TraverseStmt(stmt);
         }
-        auto node = std::make_unique<GenericAstNode>();
+        auto node = std::unique_ptr<GenericAstNode>();
         node->myAstNode = stmt;
         node->name = stmt->getStmtClassName();
         auto nodePtr = node.get();
@@ -429,7 +431,7 @@ public:
         {
             return PARENT::TraverseType(type);
         }
-        auto node = std::make_unique<GenericAstNode>();
+        auto node = std::unique_ptr<GenericAstNode>();
         //node->myType = d;
         node->name = type->getTypeClassName();
         auto nodePtr = node.get();
@@ -505,8 +507,8 @@ std::vector<GenericAstNode *> AstReader::getBestNodeMatchingPosition(int positio
 GenericAstNode *AstReader::readAst(std::string const &sourceCode, std::string const &options)
 {
     mySourceCode = sourceCode;
-    myArtificialRoot = std::make_unique<GenericAstNode>();
-    auto root = std::make_unique<GenericAstNode>();
+    myArtificialRoot = std::unique_ptr<GenericAstNode>();
+    auto root = std::unique_ptr<GenericAstNode>();
     root->name = "AST";
     myArtificialRoot->attach(std::move(root));
 

@@ -15,6 +15,7 @@
 
 
 using namespace clang;
+using namespace llvm;
 
 namespace clang_utilities {
 
@@ -247,7 +248,7 @@ bool convertUTF32ToUTF8String(ArrayRef<char> SrcBytes, std::string &Out) {
 
 // This function is an adaptation from StringLiteral::getLocationOfByte in llvm-3.7.1\src\tools\clang\lib\AST\Expr.cpp
 std::vector<std::string>
-splitStringLiteral(StringLiteral *S, const SourceManager &SM, const LangOptions &Features, const TargetInfo &Target)
+splitStringLiteral(clang::StringLiteral *S, const clang::SourceManager &SM, const clang::LangOptions &Features, const clang::TargetInfo &Target)
 {
     // Loop over all of the tokens in this string until we find the one that
     // contains the byte we're looking for.
